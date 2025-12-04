@@ -1,4 +1,18 @@
-export const TimerControls = ({timerRef, setTime, isRunning, setIsRunning}) => {
+import {useEffect, useRef} from "react";
+
+export const TimerControls = ({timerRef, time, setTime, isRunning, setIsRunning}) => {
+    const startButtonRef = useRef(null);
+
+    useEffect(() => {
+        if (startButtonRef.current) {
+            startButtonRef.current.focus();
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('time', time)
+    }, [time])
+
     const toggleTimer = () => {
         if (isRunning) {
             clearInterval(timerRef.current)
@@ -17,11 +31,13 @@ export const TimerControls = ({timerRef, setTime, isRunning, setIsRunning}) => {
         setIsRunning(false);
         setTime(0);
         timerRef.current = null;
+        localStorage.removeItem('time');
     };
 
     return (
         <>
             <button
+                ref={startButtonRef}
                 onClick={toggleTimer}
                 className="mt-3 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">{isRunning ? "Pause" : "Start"}
             </button>
